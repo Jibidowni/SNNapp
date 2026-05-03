@@ -6,6 +6,8 @@ assets/nmnist/train/
 assets/nmnist/test/
 #assets/class_samples.pt
 plots/
+weights/nmnist_mlp.pt
+weights/nmnist_mlp64_16.pt
 
 extract_class_samples.py
 NMNIST.py

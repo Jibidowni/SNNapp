@@ -325,6 +325,30 @@ st.markdown(
     .welcome-spacer-top {
         height: 22vh;
     }
+    .home-kicker {
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 0.65rem;
+    }
+
+    .home-headline {
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 650;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    margin-bottom: 0.8rem;
+    }
+
+    .home-subtitle {
+    text-align: center;
+    font-size: 1.02rem;
+    opacity: 0.65;
+    margin-bottom: 2.5rem;
+    }
 
     .welcome-title {
         text-align: center;
@@ -363,40 +387,28 @@ st.markdown(
 # Home page
 # -----------------------------
 if st.session_state.page == "home":
-    #st.markdown('<div class="welcome-spacer-top"></div>', unsafe_allow_html=True)
-    st.markdown('<div style="height: 36vh;"></div>', unsafe_allow_html=True)
-    left_space, content, right_space = st.columns([1.0, 1.6, 1.0])
+    st.markdown('<div style="height: 28vh;"></div>', unsafe_allow_html=True)
+
+    left_space, content, right_space = st.columns([0.8, 2, 0.8])
 
     with content:
-        st.markdown(
-            """
-            <div style="
-                text-align: center;
-                font-size: 1.5rem;
-                font-weight: 500;
-                opacity: 0.72;
-                margin-bottom: 1.1rem;
-            ">
-                Choose a module
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        #st.markdown('<div class="home-kicker">Interactive SNN Playground</div>', unsafe_allow_html=True)
+        st.markdown('<div class="home-headline">Explore spiking neural dynamics</div>', unsafe_allow_html=True)
+        st.markdown('<div class="home-subtitle">Simulate a single neuron or inspect a trained event-based network.</div>', unsafe_allow_html=True)
 
         col1, col2 = st.columns(2, gap="medium")
+
         with col1:
             if st.button("LIF Neuron Simulator", use_container_width=True):
                 go_to("lif")
-                st.session_state.show_loading = True
                 st.rerun()
+
         with col2:
             if st.button("Spiking Network Explorer", use_container_width=True):
                 go_to("network")
-                st.session_state.show_loading = True
                 st.rerun()
 
     st.stop()
-
 
 # -----------------------------
 # Network placeholder page
@@ -584,7 +596,7 @@ if st.session_state.page == "network":
                 ) % num_steps
                 st.rerun()
 
-            spacer, button_col, right_spacer = st.columns([0.4, 3, 0.6])
+            spacer, button_col, right_spacer = st.columns([0.01, 3, 0.99])
             with button_col:
                 prev_col, next_col = st.columns([1, 1])
 
@@ -636,17 +648,27 @@ if st.session_state.page == "network":
         recordings = st.session_state.get("last_recordings")
         disable_selectors = recordings is None
         
+        # Mapping from model keys to display names
+        layer_name_map = {
+            "hidden1": "Hidden Layer 1",
+            "hidden2": "Hidden Layer 2",
+            "output": "Output Layer"
+        }
+        
         if recordings:
             st.write(f"**Pred:** {st.session_state.last_pred} | **Target:** {st.session_state.last_target}")
             layer_keys = list(recordings.keys())
+            display_names = [layer_name_map.get(key, key) for key in layer_keys]
         else:
             st.write("**Pred:** - | **Target:** -")
-            layer_keys = ["Hidden1", "Hidden2", "Output"]
+            layer_keys = list(layer_name_map.keys())
+            display_names = list(layer_name_map.values())
 
-        layer = st.selectbox("Select layer", layer_keys, disabled=disable_selectors, key="layer_select")
+        selected_display = st.selectbox("Select layer", display_names, disabled=disable_selectors, key="layer_select")
+        layer_key = layer_keys[display_names.index(selected_display)]
         
         if recordings:
-            layer_rec = recordings[layer]
+            layer_rec = recordings[layer_key]
             mem = layer_rec["mem"]
             num_neurons = mem.shape[2]
         else:
@@ -660,7 +682,7 @@ if st.session_state.page == "network":
             mem_trace = mem[: st.session_state.auto_frame + 1, 0, neuron_index]
             spk_trace = spk[: st.session_state.auto_frame + 1, 0, neuron_index]
             
-            mem_chart, spike_chart = build_neuron_charts(mem_trace, spk_trace, layer, neuron_index)
+            mem_chart, spike_chart = build_neuron_charts(mem_trace, spk_trace, selected_display, neuron_index)
             
             st.altair_chart(mem_chart, use_container_width=True)
             st.altair_chart(spike_chart, use_container_width=True)
@@ -678,11 +700,14 @@ if st.session_state.page == "lif":
         go_to("home")
         st.rerun()
 
-    st.markdown("""
+    st.header(":material/electric_bolt: LIF Neuron Simulator")
+    st.caption("Simulate the RC-Circuit based leaky integrate-and-fire neuron.")
+    
+    #st.markdown("""
     # :material/electric_bolt: LIF Neuron Simulator
-
-    Simulate the RC-Circuit based leaky integrate-and-fire neuron.
-    """)
+    #
+    #Simulate the RC-Circuit based leaky integrate-and-fire neuron.
+    #""")
 
     with st.expander("About the model"):
         st.markdown(
