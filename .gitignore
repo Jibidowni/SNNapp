@@ -7,5 +7,9 @@ plots/
 extract_class_samples.py
 NMNIST.py
 plot.py
+
+trainNMNIST_mlp.py
+
 trainNMNIST_cnn.py
 network_cnn.py
+assets/class_samples.pt
