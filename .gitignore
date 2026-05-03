@@ -1,7 +1,10 @@
 __pycache__/
 .DS_Store
+data/
+cache/
 assets/nmnist/train/
 assets/nmnist/test/
+#assets/class_samples.pt
 plots/
 
 extract_class_samples.py
@@ -12,4 +15,3 @@ trainNMNIST_mlp.py
 
 trainNMNIST_cnn.py
 network_cnn.py
-assets/class_samples.pt
