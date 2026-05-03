@@ -1,0 +1,9 @@
+numpy
+matplotlib
+plotly
+snntorch
+torchvision
+torch
+tonic
+tqdm
+streamlit
