@@ -1,0 +1,11 @@
+__pycache__/
+.DS_Store
+assets/nmnist/train/
+assets/nmnist/test/
+plots/
+
+extract_class_samples.py
+NMNIST.py
+plot.py
+trainNMNIST_cnn.py
+network_cnn.py
