@@ -421,8 +421,14 @@ if st.session_state.page == "network":
     st.header("Spiking Neuronal Network Explorer")
     st.caption("Explore how a trained SNN classifies event-based N-MNIST samples.")
 
-    with st.expander("About DVS and N-MNIST"):
+    with st.expander("About Data and Model"):
 
+        st.markdown("""    
+        The **Neuron Model** used in this network is optimized for machine learning tasks, which reduces the number of hyperparameters compared to what you see in the LIF simulator.
+        However, it still preserves the basic LIF dynamics. In this form, it more closely resembles an activation function with a leakage term.
+        """)
+        st.latex(r"U[t+1] = \beta U[t] + W X[t+1] - S[t]U_{\mathrm{thr}}")
+        
         st.markdown("""
         **Dynamic Vision Sensors (DVS)** record pixel-wise changes in brightness instead of full Images.  
         Each Event contains a pixel position, timestamp, and polarity.
@@ -722,7 +728,7 @@ if st.session_state.page == "lif":
         st.markdown("**ODE:**")
         st.latex(r"\tau \frac{dU(t)}{dt} = -U(t) + R I_{\mathrm{in}}(t)")
         st.markdown("**Discrete Euler update:**")
-        st.latex(r"U[t+1] = U[t] + \frac{dt}{\tau}\left(-U[t] + R I_{\mathrm{in}}[t]\right) - S[t] \cdot \mathrm{reset}")
+        st.latex(r"U[t+1] = U[t] + \frac{dt}{\tau}\left(-U[t] + R I_{\mathrm{in}}[t]\right) - S[t]U_{\mathrm{thr}}")
 
         st.markdown(
             """
